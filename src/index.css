@@ -286,6 +286,18 @@ body {
   cursor: not-allowed;
 }
 
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+
+.disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
+}
+
 .bg-gradient-to-r.from-purple-400.to-pink-400 {
   background: linear-gradient(to right, #c084fc, #f472b6);
 }

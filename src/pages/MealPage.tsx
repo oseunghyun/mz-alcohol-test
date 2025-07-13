@@ -22,6 +22,10 @@ export const MealPage = () => {
     setCurrentPage('mood');
   };
 
+  const handleBack = () => {
+    setCurrentPage('sleep');
+  };
+
   const mealOptions = [
     {
       type: 'empty' as MealType,
@@ -52,6 +56,8 @@ export const MealPage = () => {
       showProgress
       currentStep={3}
       totalSteps={5}
+      showBackButton
+      onBackClick={handleBack}
     >
       <div className="space-y-6">
         <motion.div

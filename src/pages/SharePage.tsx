@@ -1,13 +1,25 @@
 import { motion } from 'framer-motion';
-import { Copy, Download, ArrowLeft } from 'lucide-react';
+import { Copy, Download, ArrowLeft, Share2, MessageCircle } from 'lucide-react';
 import { PageContainer } from '../components/PageContainer';
 import { Button } from '../components/Button';
 import { useAppStore } from '../store/useAppStore';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { 
+  generateAndDownloadImage, 
+  generateImageBlob, 
+  shareToKakao, 
+  shareToInstagram, 
+  shareToSocial,
+  copyToClipboard,
+  isMobile 
+} from '../utils/shareUtils';
 
 export const SharePage = () => {
   const { result, setCurrentPage } = useAppStore();
   const [copied, setCopied] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
 
   if (!result) return null;
 
@@ -39,18 +51,66 @@ ${levelInfo.emoji} ${result.level}급 - ${levelInfo.text}
 #오늘술얼마나ㄱㄴ #주량테스트 #MZ술친구`;
 
   const handleCopyText = async () => {
-    try {
-      await navigator.clipboard.writeText(shareText);
+    const success = await copyToClipboard(shareText);
+    if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('복사 실패:', err);
+    } else {
+      alert('복사에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
-  const handleDownloadImage = () => {
-    // 실제로는 canvas나 html2canvas를 사용해서 이미지를 생성해야 함
-    alert('이미지 다운로드 기능은 개발 예정입니다! 📸');
+  const handleDownloadImage = async () => {
+    setIsDownloading(true);
+    try {
+      const success = await generateAndDownloadImage('share-card', `주량테스트-${result.level}급`);
+      if (success) {
+        alert('이미지가 다운로드되었습니다! 📸');
+      } else {
+        alert('이미지 생성에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('이미지 다운로드 실패:', error);
+      alert('이미지 다운로드에 실패했습니다.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleKakaoShare = () => {
+    const title = `오늘 술 얼마나 ㄱㄴ? ${result.level}급 인증! ${levelInfo.emoji}`;
+    const description = `${levelInfo.text} - 평소의 ${result.percentage}% 파워!\n나도 주량 테스트 해보자!`;
+    
+    shareToKakao(title, description);
+  };
+
+  const handleInstagramShare = async () => {
+    setIsSharing(true);
+    try {
+      // 이미지 생성
+      const imageBlob = await generateImageBlob('share-card');
+      const shareText = `${levelInfo.emoji} ${result.level}급 - ${levelInfo.text}\n평소의 ${result.percentage}% 파워!\n\n#오늘술얼마나ㄱㄴ #주량테스트 #MZ술친구`;
+      
+      await shareToInstagram(shareText, imageBlob || undefined);
+    } catch (error) {
+      console.error('인스타그램 공유 실패:', error);
+      alert('공유에 실패했습니다.');
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const handleUniversalShare = async () => {
+    setIsSharing(true);
+    try {
+      const title = '오늘 술 얼마나 ㄱㄴ? 🍺';
+      await shareToSocial(title, shareText);
+    } catch (error) {
+      console.error('공유 실패:', error);
+      alert('공유에 실패했습니다.');
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   return (
@@ -68,6 +128,8 @@ ${levelInfo.emoji} ${result.level}급 - ${levelInfo.text}
 
         {/* 공유용 카드 미리보기 */}
         <motion.div
+          ref={shareCardRef}
+          id="share-card"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="bg-gradient-to-br from-pink-400 via-purple-500 to-blue-500 p-6 rounded-3xl text-white"
@@ -121,12 +183,29 @@ ${levelInfo.emoji} ${result.level}급 - ${levelInfo.text}
             </div>
           </Button>
           
-          <Button onClick={handleDownloadImage} variant="secondary">
+          <Button 
+            onClick={handleDownloadImage} 
+            variant="secondary"
+            disabled={isDownloading}
+          >
             <div className="flex items-center justify-center gap-2">
               <Download className="w-5 h-5" />
-              이미지로 저장하기 📸
+              {isDownloading ? '생성중... ⏳' : '이미지로 저장하기 📸'}
             </div>
           </Button>
+
+          {isMobile() && (
+            <Button 
+              onClick={handleUniversalShare} 
+              variant="secondary"
+              disabled={isSharing}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <Share2 className="w-5 h-5" />
+                {isSharing ? '공유중... ⏳' : '모든 앱에 공유하기 📱'}
+              </div>
+            </Button>
+          )}
         </motion.div>
 
         {/* 소셜 링크들 */}
@@ -136,11 +215,24 @@ ${levelInfo.emoji} ${result.level}급 - ${levelInfo.text}
           transition={{ delay: 0.6 }}
           className="grid grid-cols-2 gap-3"
         >
-          <button className="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-4 rounded-2xl font-medium">
-            인스타 스토리
+          <button 
+            onClick={handleInstagramShare}
+            disabled={isSharing}
+            className="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-4 rounded-2xl font-medium cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="flex items-center justify-center gap-2">
+              <span>📸</span>
+              {isSharing ? '공유중...' : '인스타 스토리'}
+            </div>
           </button>
-          <button className="bg-yellow-400 text-gray-800 p-4 rounded-2xl font-medium">
-            카카오톡
+          <button 
+            onClick={handleKakaoShare}
+            className="bg-yellow-400 text-gray-800 p-4 rounded-2xl font-medium cursor-pointer transition-all duration-200 hover:scale-105"
+          >
+            <div className="flex items-center justify-center gap-2">
+              <MessageCircle className="w-5 h-5" />
+              카카오톡
+            </div>
           </button>
         </motion.div>
 

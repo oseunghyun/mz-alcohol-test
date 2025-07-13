@@ -18,6 +18,10 @@ export const SleepPage = () => {
     setCurrentPage('meal');
   };
 
+  const handleBack = () => {
+    setCurrentPage('basic-info');
+  };
+
   const getSleepStatus = (hours: number) => {
     if (hours <= 3) return { emoji: '😵‍💫', text: '좀비 모드', color: 'text-red-500' };
     if (hours <= 6) return { emoji: '😴', text: '부족 모드', color: 'text-orange-500' };
@@ -33,6 +37,8 @@ export const SleepPage = () => {
       showProgress
       currentStep={2}
       totalSteps={5}
+      showBackButton
+      onBackClick={handleBack}
     >
       <div className="space-y-8">
         <motion.div

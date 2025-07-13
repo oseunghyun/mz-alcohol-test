@@ -17,6 +17,10 @@ export const BasicInfoPage = () => {
     setCurrentPage('sleep');
   };
 
+  const handleBack = () => {
+    setCurrentPage('main');
+  };
+
   const DrinkSlider = ({ 
     label, 
     value, 
@@ -70,6 +74,8 @@ export const BasicInfoPage = () => {
       showProgress
       currentStep={1}
       totalSteps={5}
+      showBackButton
+      onBackClick={handleBack}
     >
       <div className="space-y-8">
         <motion.div

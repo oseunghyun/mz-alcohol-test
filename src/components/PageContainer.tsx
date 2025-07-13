@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 interface PageContainerProps {
@@ -7,6 +8,8 @@ interface PageContainerProps {
   showProgress?: boolean;
   currentStep?: number;
   totalSteps?: number;
+  showBackButton?: boolean;
+  onBackClick?: () => void;
 }
 
 export const PageContainer = ({ 
@@ -14,7 +17,9 @@ export const PageContainer = ({
   title, 
   showProgress = false,
   currentStep = 1,
-  totalSteps = 5 
+  totalSteps = 5,
+  showBackButton = false,
+  onBackClick
 }: PageContainerProps) => {
   return (
     <div className="mobile-container">
@@ -24,6 +29,17 @@ export const PageContainer = ({
         transition={{ duration: 0.3 }}
         className="p-6 min-h-screen flex flex-col"
       >
+        {showBackButton && onBackClick && (
+          <div className="mb-4">
+            <button 
+              onClick={onBackClick}
+              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+        )}
+
         {showProgress && (
           <div className="mb-6">
             <div className="flex justify-between text-sm text-gray-500 mb-2">

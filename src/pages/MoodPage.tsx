@@ -27,6 +27,10 @@ export const MoodPage = () => {
     }, 100);
   };
 
+  const handleBack = () => {
+    setCurrentPage('meal');
+  };
+
   const moodOptions = [
     {
       type: 'stressed' as MoodType,
@@ -57,6 +61,8 @@ export const MoodPage = () => {
       showProgress
       currentStep={4}
       totalSteps={5}
+      showBackButton
+      onBackClick={handleBack}
     >
       <div className="space-y-6">
         <motion.div

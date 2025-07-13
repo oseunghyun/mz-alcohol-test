@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mz-alcohol-test.vercel.app/sitemap.xml

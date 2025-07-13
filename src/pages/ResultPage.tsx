@@ -1,15 +1,15 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Share2, RotateCcw, Clock, Home, Crown } from 'lucide-react';
+import { Share2, RotateCcw, Clock, Home } from 'lucide-react';
 import { PageContainer } from '../components/PageContainer';
 import { Button } from '../components/Button';
-import { AdBanner } from '../components/AdBanner';
-import { PremiumModal } from '../components/PremiumModal';
+// import { AdBanner } from '../components/AdBanner';
+// import { PremiumModal } from '../components/PremiumModal';
 import { useAppStore } from '../store/useAppStore';
 
 export const ResultPage = () => {
   const { result, setCurrentPage, resetData } = useAppStore();
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  // const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   if (!result) return null;
 
@@ -35,15 +35,15 @@ export const ResultPage = () => {
     resetData();
   };
 
-  const handlePremiumUpgrade = () => {
-    alert('결제 페이지로 이동합니다! 💳');
-    setShowPremiumModal(false);
-  };
+  // const handlePremiumUpgrade = () => {
+  //   alert('결제 페이지로 이동합니다! 💳');
+  //   setShowPremiumModal(false);
+  // };
 
   return (
     <>
       <PageContainer showProgress currentStep={5} totalSteps={5}>
-        <AdBanner position="top" />
+        {/* <AdBanner position="top" /> */}
         
         <div className="space-y-6">
         {/* 등급 표시 */}
@@ -136,23 +136,23 @@ export const ResultPage = () => {
             </div>
           </Button>
           
-          <Button onClick={() => setShowPremiumModal(true)} variant="secondary">
+          {/* <Button onClick={() => setShowPremiumModal(true)} variant="secondary">
             <div className="flex items-center justify-center gap-2">
               <Crown className="w-5 h-5" />
               프리미엄 기능 보기 ✨
             </div>
-          </Button>
+          </Button> */}
         </motion.div>
         
-        <AdBanner position="bottom" />
+        {/* <AdBanner position="bottom" /> */}
       </div>
     </PageContainer>
     
-    <PremiumModal 
+    {/* <PremiumModal 
       isOpen={showPremiumModal}
       onClose={() => setShowPremiumModal(false)}
       onUpgrade={handlePremiumUpgrade}
-    />
+    /> */}
     </>
   );
 };

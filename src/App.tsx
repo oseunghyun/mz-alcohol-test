@@ -6,6 +6,7 @@ import { MealPage } from './pages/MealPage';
 import { MoodPage } from './pages/MoodPage';
 import { ResultPage } from './pages/ResultPage';
 import { SharePage } from './pages/SharePage';
+import { KakaoInit } from './components/KakaoInit';
 
 function App() {
   const { currentPage } = useAppStore();
@@ -33,6 +34,7 @@ function App() {
 
   return (
     <div className="min-h-screen">
+      <KakaoInit />
       {renderCurrentPage()}
     </div>
   );
