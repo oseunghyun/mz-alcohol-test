@@ -26,7 +26,7 @@ export const MealPage = () => {
     {
       type: 'empty' as MealType,
       emoji: '🤮',
-      title: '자살 모드',
+      title: '공복 챌린저',
       description: '아무것도 안 먹었어',
       color: 'from-red-400 to-red-600'
     },
