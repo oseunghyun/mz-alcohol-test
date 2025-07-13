@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 // 카카오 테스트용 앱 키 (실제 서비스에서는 환경변수로 관리)
-const KAKAO_APP_KEY = '0b1b7b5e98bbf0a54b24d90ec0e5c9f5'; // 테스트용 공개키
+const KAKAO_APP_KEY = '2866a71fb553e7e90d6abcfe2e0b9903'; // 테스트용 공개키
 
 export const KakaoInit = () => {
   useEffect(() => {
@@ -10,7 +10,7 @@ export const KakaoInit = () => {
       const Kakao = (window as any).Kakao;
 
       if (!Kakao.isInitialized()) {
-        Kakao.init('2866a71fb553e7e90d6abcfe2e0b9903');
+        Kakao.init('KAKAO_APP_KEY');
         console.log('Kakao SDK 초기화 완료:', Kakao.isInitialized());
       }
     }
