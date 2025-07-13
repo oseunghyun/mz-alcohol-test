@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mz-alcohol-test.vercel.app/sitemap.xml
+Sitemap: https://masilsu.vercel.app/sitemap.xml
