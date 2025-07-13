@@ -6,9 +6,7 @@ import { useAppStore } from '../store/useAppStore';
 import { useState, useRef } from 'react';
 import { 
   generateAndDownloadImage, 
-  generateImageBlob, 
   shareToKakao, 
-  shareToInstagram, 
   shareToSocial,
   copyToClipboard,
   isMobile 
@@ -84,21 +82,6 @@ ${levelInfo.emoji} ${result.level}급 - ${levelInfo.text}
     shareToKakao(title, description);
   };
 
-  const handleInstagramShare = async () => {
-    setIsSharing(true);
-    try {
-      // 이미지 생성
-      const imageBlob = await generateImageBlob('share-card');
-      const shareText = `${levelInfo.emoji} ${result.level}급 - ${levelInfo.text}\n평소의 ${result.percentage}% 파워!\n\n#오늘술얼마나ㄱㄴ #주량테스트 #MZ술친구`;
-      
-      await shareToInstagram(shareText, imageBlob || undefined);
-    } catch (error) {
-      console.error('인스타그램 공유 실패:', error);
-      alert('공유에 실패했습니다.');
-    } finally {
-      setIsSharing(false);
-    }
-  };
 
   const handleUniversalShare = async () => {
     setIsSharing(true);
@@ -208,30 +191,19 @@ ${levelInfo.emoji} ${result.level}급 - ${levelInfo.text}
           )}
         </motion.div>
 
-        {/* 소셜 링크들 */}
+        {/* 카카오톡 공유 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="grid grid-cols-2 gap-3"
         >
           <button 
-            onClick={handleInstagramShare}
-            disabled={isSharing}
-            className="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-4 rounded-2xl font-medium cursor-pointer transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <div className="flex items-center justify-center gap-2">
-              <span>📸</span>
-              {isSharing ? '공유중...' : '인스타 스토리'}
-            </div>
-          </button>
-          <button 
             onClick={handleKakaoShare}
-            className="bg-yellow-400 text-gray-800 p-4 rounded-2xl font-medium cursor-pointer transition-all duration-200 hover:scale-105"
+            className="w-full bg-yellow-400 text-gray-800 p-4 rounded-2xl font-medium cursor-pointer transition-all duration-200 hover:scale-105"
           >
             <div className="flex items-center justify-center gap-2">
               <MessageCircle className="w-5 h-5" />
-              카카오톡
+              카카오톡으로 공유하기
             </div>
           </button>
         </motion.div>

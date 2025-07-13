@@ -44,29 +44,6 @@ export const generateAndDownloadImage = async (elementId: string, filename: stri
   }
 };
 
-// Canvas를 Blob으로 변환하는 헬퍼 함수
-export const generateImageBlob = async (elementId: string): Promise<Blob | null> => {
-  try {
-    const element = document.getElementById(elementId);
-    if (!element) return null;
-
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor: '#ffffff'
-    });
-
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => {
-        resolve(blob);
-      }, 'image/png', 1.0);
-    });
-  } catch (error) {
-    console.error('이미지 Blob 생성 실패:', error);
-    return null;
-  }
-};
 
 // 카카오톡 공유
 export const shareToKakao = (title: string, description: string, imageUrl?: string, webUrl?: string) => {
@@ -101,36 +78,6 @@ export const shareToKakao = (title: string, description: string, imageUrl?: stri
   }
 };
 
-// 인스타그램 스토리 공유 (Web Share API 사용)
-export const shareToInstagram = async (text: string, imageBlob?: Blob) => {
-  try {
-    if (navigator.share && imageBlob) {
-      const file = new File([imageBlob], 'alcohol-test-result.png', { type: 'image/png' });
-      
-      await navigator.share({
-        title: '오늘 술 얼마나 ㄱㄴ? 🍺',
-        text: text,
-        files: [file]
-      });
-    } else if (navigator.share) {
-      // 이미지 없이 텍스트만 공유
-      await navigator.share({
-        title: '오늘 술 얼마나 ㄱㄴ? 🍺',
-        text: text,
-        url: window.location.href
-      });
-    } else {
-      // Web Share API 미지원시 클립보드 복사
-      await copyToClipboard(text + '\n' + window.location.href);
-      alert('공유 내용이 복사되었습니다! 인스타그램에 붙여넣기 해주세요 📱');
-    }
-  } catch (error) {
-    console.error('인스타그램 공유 실패:', error);
-    // 실패시 클립보드 복사로 대체
-    await copyToClipboard(text + '\n' + window.location.href);
-    alert('공유 내용이 복사되었습니다! 📋');
-  }
-};
 
 // 범용 소셜 공유 (Web Share API)
 export const shareToSocial = async (title: string, text: string, url?: string) => {
@@ -184,10 +131,6 @@ export const isMobile = (): boolean => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 };
 
-// 인스타그램 앱 감지
-export const isInstagramApp = (): boolean => {
-  return /Instagram/i.test(navigator.userAgent);
-};
 
 // 카카오톡 앱 감지
 export const isKakaoTalkApp = (): boolean => {

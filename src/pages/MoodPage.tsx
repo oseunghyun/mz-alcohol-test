@@ -44,7 +44,7 @@ export const MoodPage = () => {
       emoji: '😮‍💨',
       title: '배터리 10%',
       description: '오늘 너무 피곤해',
-      color: 'from-yellow-400 to-yellow-600'
+      color: 'from-orange-400 to-orange-600'
     },
     {
       type: 'good' as MoodType,
