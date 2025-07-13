@@ -8,9 +8,9 @@ export const KakaoInit = () => {
     // 카카오 SDK 초기화
     if (typeof window !== 'undefined' && (window as any).Kakao) {
       const Kakao = (window as any).Kakao;
-      
+
       if (!Kakao.isInitialized()) {
-        Kakao.init(KAKAO_APP_KEY);
+        Kakao.init('2866a71fb553e7e90d6abcfe2e0b9903');
         console.log('Kakao SDK 초기화 완료:', Kakao.isInitialized());
       }
     }
